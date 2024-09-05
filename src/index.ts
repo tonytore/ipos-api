@@ -1,4 +1,6 @@
-import express, { Request, Response } from "express";
+import express from "express";
+import { getCustomers } from "./controllers/customers";
+import customerRoute from "./routes/customer";
 
 require("dotenv").config();
 const cors = require("cors");
@@ -14,20 +16,5 @@ app.listen(PORT, () => {
 });
 
 
-app.get("/customers", async (req: Request, res: Response) => {
-  const customers = [
-    { name: "John Doe", email: "john.doe@example.com", phone: "+1234567890" },
-    {
-      name: "Joel Smith",
-      email: "joel.smith@example.com",
-      phone: "+0987654321",
-    },
-    {
-      name: "Muke John",
-      email: "john.muke@example.com",
-      phone: "+0987654321",
-    },
-  ];
+app.use("/api/v1", customerRoute)
 
-  return res.status(200).json(customers);
-});
