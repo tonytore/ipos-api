@@ -4,6 +4,7 @@ import customerRoute from "./routes/customer";
 import userRoute from "./routes/user";
 import shopRoute from "./routes/shop";
 import supplierRoute from "./routes/supplier";
+import loginRoute from "./routes/login";
 
 require("dotenv").config();
 const cors = require("cors");
@@ -23,5 +24,5 @@ app.use("/api/v1", customerRoute)
 app.use("/api/v1", userRoute)
 app.use("/api/v1", shopRoute)
 app.use("/api/v1", supplierRoute)
-
+app.use("/api/v1", loginRoute)
 
