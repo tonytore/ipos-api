@@ -119,26 +119,78 @@ export async function getUserById(req: Request, res: Response) {
 }
 export async function updateUserById(req: Request, res: Response) {
     const { id } = req.params;
-    const { username,firstname,lastname, email, phone, dob, gender, image, } = req.body;
+    const { username,firstname,lastname, email, phone, dob, gender, image, password } = req.body;
     try {
-      const user = await db.user.findUnique({
+      const existingUser = await db.user.findUnique({
         where: {
           id,
         },
       });
-      if (!user) {
+      if (!existingUser) {
         return res.status(404).json({ message: "User not found" });
       }
-      const updateUser = db.user.update({
+
+    if(username && username !== existingUser.username) {
+        const existingUserName = await db.user.findUnique({
+            where: {
+              username,
+            },
+          });
+          if (existingUserName) {
+            return res
+              .status(409)
+              .json({
+                message: `Username with this name ${username} already exists`,
+              });
+          }
+      
+    }
+
+    if(email && email !== existingUser.email) {
+        const existingEmail = await db.user.findUnique({
+            where: {
+              email,
+            },
+          });
+          if (existingEmail) {
+            return res
+              .status(400)
+              .json({ message: `this Email ${email} already exists` });
+          }
+      
+    }
+
+    if(phone && phone !== existingUser.phone) {
+        const existingPhone = await db.user.findUnique({
+            where: {
+              phone,
+            },
+          });
+          if (existingPhone) {
+            return res
+              .status(400)
+              .json({ message: `this phone ${phone} already exists` });
+          }
+    }
+
+    let hashedPassword = existingUser.password
+     if (password) {
+        hashedPassword = await bcrypt.hash(password,10)
+     }
+
+     const updatedUser = await db.user.update({
         where:{
             id
         },
         data:{
-            username,firstname,lastname, email, phone, dob, gender, image,
+            username,firstname,lastname, email, phone, dob, gender, image,password:hashedPassword
         }
       })
+    
+      const {password:savedPass, ...others} = updatedUser
+
       return res.status(200).json({
-          data:updateUser,
+          data:others,
           error:null
       });
     } catch (error) {

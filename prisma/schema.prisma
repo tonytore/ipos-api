@@ -13,11 +13,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum CustomerType {
+  RETAIL
+  WHOLESALE
+  DISTRIBUTOR
+  OTHER
+}
+
 model Customer {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  email     String   @unique
-  phone     String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  customerType   CustomerType
+  firstName      String
+  lastName       String
+  phone          String       @unique
+  gender         Gender
+  country        String
+  location       String
+  maxCreditLimit Float
+  maxCreditDays  Int
+  taxPin         String?
+  dob            DateTime?
+  email          String?      @unique
+  NIN            String?      @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum SupplierType {
+  MANUFACTURER
+  DISTRIBUTOR
+  WHOLESALER
+  RETAILER
+  OTHER
+}
+
+model Supplier {
+  id                String       @id @default(auto()) @map("_id") @db.ObjectId
+  supplierType      SupplierType
+  name              String
+  contactPerson     String
+  phone             String       @unique
+  email             String?      @unique
+  location          String
+  country           String
+  website           String?
+  taxPin            String?
+  regNumber         String?      @unique
+  bankAccountNumber String?
+  bankName          String?
+  paymentTerms      String?
+  logo              String?      @default("https://utfs.io/f/cedbb143-0c78-4714-8b70-cac825d533e0-9jz08y.png")
+  rating            Float?
+  notes             String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -38,17 +87,17 @@ model Shop {
 }
 
 model User {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  username String @unique
-  firstname String 
-  lastname String
-  email    String    @unique
-  password String
-  phone    String    @unique
-  dob      DateTime?
-  gender   Gender
-  image    String?
-  role     Role      @default(ATTENDANT)
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  username  String    @unique
+  firstname String
+  lastname  String
+  email     String    @unique
+  password  String
+  phone     String    @unique
+  dob       DateTime?
+  gender    Gender
+  image     String?
+  role      Role      @default(ATTENDANT)
 
   shops Shop[]
 

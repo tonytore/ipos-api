@@ -1,25 +1,29 @@
 import { db } from "@/db/db";
 import { Request, Response } from "express";
 
-export async function createCustomer(req: Request, res: Response){
+export async function createSupplier(req: Request, res: Response){
   const { 
-    customerType,
-    firstName,
-    lastName,
+    supplierType,
+    name,
+    contactPerson,
     phone,
-    gender,
+    email,
     country,
     location,
-    maxCreditLimit,
-    maxCreditDays,
+    website,
     taxPin,
-    email,
-    NIN 
+    regNumber,
+    bankAccountNumber,
+    bankName,
+    paymentTerms,
+    logo,
+    rating,
+    notes
   } = req.body;
  
   try {
    if (email) {
-    const existingEmail = await db.customer.findUnique({
+    const existingEmail = await db.supplier.findUnique({
       where: {
         email,
       },
@@ -34,7 +38,7 @@ export async function createCustomer(req: Request, res: Response){
     }
    }
   if (phone) {
-    const existingPhone = await db.customer.findUnique({
+    const existingPhone = await db.supplier.findUnique({
       where: {
         phone,
       },
@@ -48,10 +52,10 @@ export async function createCustomer(req: Request, res: Response){
         });
     }
   }
-  if (NIN) {
-    const existingNIN = await db.customer.findUnique({
+  if (regNumber) {
+    const existingNIN = await db.supplier.findUnique({
       where: {
-        NIN,
+        regNumber,
       },
     });
     if (existingNIN) {
@@ -63,23 +67,28 @@ export async function createCustomer(req: Request, res: Response){
         });
     }
   }
-    const newCustomer = await db.customer.create({
+    const newSupplier = await db.supplier.create({
       data:{
-        customerType,
-        firstName,
-        lastName,
+        supplierType,
+        name,
+        contactPerson,
         phone,
-        gender,
+        email,
         country,
         location,
-        maxCreditLimit,
-        maxCreditDays,
+        website,
         taxPin,
-        email,
-        NIN },
+        regNumber,
+        bankAccountNumber,
+        bankName,
+        paymentTerms,
+        logo,
+        rating,
+        notes
+    },
     })
     
-    return res.status(201).json(newCustomer);
+    return res.status(201).json(newSupplier);
   } catch (error) {
     console.log(error);
     
@@ -87,30 +96,30 @@ export async function createCustomer(req: Request, res: Response){
 
 
 }
-export async function getCustomers(req: Request, res: Response) {
+export async function getSupplier(req: Request, res: Response) {
  try {
-  const customers = await db.customer.findMany({
+  const suppliers = await db.supplier.findMany({
     orderBy:{
       createdAt:"desc"
     }
    })
   
-    return res.status(200).json(customers);
+    return res.status(200).json(suppliers);
  } catch (error) {
   console.log(error);
   
  }
 }
 
-export async function getCustomerById(req: Request, res: Response) {
+export async function getSupplierById(req: Request, res: Response) {
   const { id } = req.params;
    try {
-    const customer = await db.customer.findUnique({
+    const supplier = await db.supplier.findUnique({
       where:{
         id,
       },
     })
-    return res.status(200).json(customer);
+    return res.status(200).json(supplier);
    } catch (error) {
     
    }

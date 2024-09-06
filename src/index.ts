@@ -3,6 +3,7 @@ import { getCustomers } from "./controllers/customers";
 import customerRoute from "./routes/customer";
 import userRoute from "./routes/user";
 import shopRoute from "./routes/shop";
+import supplierRoute from "./routes/supplier";
 
 require("dotenv").config();
 const cors = require("cors");
@@ -21,5 +22,6 @@ app.listen(PORT, () => {
 app.use("/api/v1", customerRoute)
 app.use("/api/v1", userRoute)
 app.use("/api/v1", shopRoute)
+app.use("/api/v1", supplierRoute)
 
 
