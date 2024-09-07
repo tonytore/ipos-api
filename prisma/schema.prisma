@@ -67,6 +67,8 @@ model Supplier {
   rating            Float?
   notes             String?
 
+  products Product[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -113,4 +115,64 @@ enum Gender {
 enum Role {
   ADMIN
   ATTENDANT
+}
+
+model Unit {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  abbreviation String
+  slug         String    @unique
+  products     Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Brand {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  slug     String    @unique
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  slug     String    @unique
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  batchNumber String?
+  barCode     String?  @unique
+  image       String?
+  tax         Int?
+  alertQty    Int
+  stockQty    Int
+  price       Int
+  buyerPrice  Int?
+  sku         String   @unique
+  productCode String   @unique
+  slug        String   @unique
+  supplierId  String   @db.ObjectId
+  unitId      String   @db.ObjectId
+  brandId     String   @db.ObjectId
+  categoryId  String   @db.ObjectId
+  expiryDate DateTime? @default("2025-12-31T23:59:59Z")
+  unit        Unit     @relation(fields: [unitId], references: [id])
+  brand       Brand    @relation(fields: [brandId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
+  supplier    Supplier @relation(fields: [supplierId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -122,23 +122,42 @@ export async function getShopById(req: Request, res: Response) {
 
   export async function updateShopById(req: Request, res: Response) {
     const { id } = req.params;
-    const { name, location } = req.body;
+    const {     
+      name,
+      slug,
+      location,
+
+     } = req.body;
     try {
-      const existingShop = await db.user.findUnique({
+      const existingShop = await db.shop.findUnique({
         where: {
           id,
         },
       });
+
       if (!existingShop) {
         return res.status(404).json({ message: "Shop not found" });
       }
-  
-      const updateShop = db.shop.update({
+      
+      if(slug && slug !== existingShop.slug) {
+        const existingSlug = await db.shop.findUnique({
+          where: {
+            slug,
+          },
+        });
+        if (existingSlug) {
+          return res.status(404).json({ message: `Shop name ${name} is already exist` });
+        }
+    }
+      const updateShop =await db.shop.update({
         where:{
             id
         },
         data:{
-            name, location
+          name,
+          slug,
+          location,
+        
         }
       })
       return res.status(200).json({
