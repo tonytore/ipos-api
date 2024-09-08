@@ -12,7 +12,7 @@ export async function createProducts(req: Request, res: Response) {
     alertQty,
     stockQty,
     price,
-    buyerPrice,
+    buyingPrice,
     sku,
     productCode,
     slug,
@@ -20,7 +20,9 @@ export async function createProducts(req: Request, res: Response) {
     unitId,
     brandId,
     categoryId,
-    expiryDate
+    expiryDate,
+    wholesalePrice,
+    shopId
 } = req.body;
   try {
 
@@ -86,7 +88,7 @@ export async function createProducts(req: Request, res: Response) {
     alertQty,
     stockQty,
     price,
-    buyerPrice,
+    buyingPrice,
     sku,
     productCode,
     slug,
@@ -94,7 +96,9 @@ export async function createProducts(req: Request, res: Response) {
     unitId,
     brandId,
     categoryId,
-    expiryDate
+    expiryDate,
+    wholesalePrice,
+    shopId
       },
     });
     return res.status(201).json({
@@ -171,11 +175,13 @@ export async function getProductById(req: Request, res: Response) {
       alertQty,
       stockQty,
       price,
-      buyerPrice,
+      buyingPrice,
       sku,
       productCode,
       slug,
-      expiryDate
+      expiryDate,
+      wholesalePrice,
+      shopId
      } = req.body;
     try {
       const existingProduct = await db.product.findUnique({
@@ -259,11 +265,13 @@ export async function getProductById(req: Request, res: Response) {
           alertQty,
           stockQty,
           price,
-          buyerPrice,
+          buyingPrice,
           sku,
           productCode,
           slug,
-          expiryDate
+          expiryDate,
+          wholesalePrice,
+          shopId
         }
       })
       return res.status(200).json({
