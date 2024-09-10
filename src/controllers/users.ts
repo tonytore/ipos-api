@@ -75,16 +75,20 @@ export async function getUsers(req: Request, res: Response) {
         createdAt: "desc",
       },
     });
-   const filterdUsers = users.map((user)=>{
+
+    console.log("Fetched Users:", users);
+
+   const filteredUsers = users.map((user)=>{
      const {password,...others} = user
      return others
    })
    return res.status(200).json({
-    data:filterdUsers,
+    data:filteredUsers,
     error:null
 });
   } catch (error) {
-    console.log(error);
+
+    console.error("Error retrieving users:", error,);
     return res.status(500).json({
         error: "Something went wrong",
         data:null

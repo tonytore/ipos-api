@@ -2,6 +2,7 @@ import { SaleType, paymentMethod } from "@prisma/client";
 
 export interface SaleRequestBody {
   customerId: string;
+  shopId: string
   customerName: string;
   customerEmail: string;
   saleAmount: number;
@@ -10,11 +11,11 @@ export interface SaleRequestBody {
   saleType: SaleType;
   paymentMethod: paymentMethod;
   transactionCode: string;
+  SaleItems:SaleItems[]
 }
 
 
 export interface SaleItems {
-    saleId:string
     productId:string
     qty:number
     ProductPrice:number
