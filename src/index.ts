@@ -10,6 +10,9 @@ import brandRoute from "./routes/brand";
 import categoryRoute from "./routes/category";
 import productRoute from "./routes/product";
 import saleRoute from "./routes/sale";
+import expenseCategoryRoute from "./routes/expenseCategory";
+import payeeRoute from "./routes/payee";
+import expenseRoute from "./routes/expense";
 
 require("dotenv").config();
 const cors = require("cors");
@@ -35,4 +38,7 @@ app.use("/api/v1", brandRoute)
 app.use("/api/v1", categoryRoute)
 app.use("/api/v1", productRoute)
 app.use("/api/v1", saleRoute)
+app.use("/api/v1", expenseCategoryRoute)
+app.use("/api/v1", payeeRoute)
+app.use("/api/v1", expenseRoute)
 

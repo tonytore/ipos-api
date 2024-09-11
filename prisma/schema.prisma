@@ -87,6 +87,7 @@ model Shop {
   attendantId String[]  @db.ObjectId
   products    Product[]
   sales     Sale[]
+  expenses Expense[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -241,3 +242,42 @@ model Sale {
   updatedAt DateTime @updatedAt
 }
 
+model ExpenseCategory {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  slug     String    @unique
+  expenses Expense[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Payee {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  phone     String    @unique
+  expenses Expense[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Expense {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  title        String 
+  amount      Int
+  description String?
+  attachments String[]
+  expenseDate DateTime @default(now())
+  payeeId     String  @db.ObjectId
+  categoryId     String  @db.ObjectId
+  shopId String @db.ObjectId
+
+
+  category ExpenseCategory @relation(fields: [categoryId], references: [id])
+  payee    Payee    @relation(fields: [payeeId], references: id)
+  shop    Shop    @relation(fields: [shopId], references: id)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
