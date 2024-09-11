@@ -13,6 +13,7 @@ import saleRoute from "./routes/sale";
 import expenseCategoryRoute from "./routes/expenseCategory";
 import payeeRoute from "./routes/payee";
 import expenseRoute from "./routes/expense";
+import rateLimit from "express-rate-limit";
 
 require("dotenv").config();
 const cors = require("cors");
@@ -21,6 +22,38 @@ const app = express();
 app.use(cors());
 
 const PORT = process.env.PORT || 8000;
+
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  standardHeaders:true,
+  legacyHeaders:false,
+  handler: (req,res)=>{
+    res.status(429).json({
+      error:"Too many requests, please try again later."
+    })
+  }
+})
+
+app.use(generalLimiter)
+
+
+const strictLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 15 minutes
+  max: 5, // limit each IP to 100 requests per windowMs
+  standardHeaders:true,
+  legacyHeaders:false,
+  handler: (req,res)=>{
+    res.status(429).json({
+      error:"Too many requests, please try again later."
+    })
+  }
+});
+
+app.use("/api/v1/sales", strictLimiter)
+app.use("/api/v1/users", strictLimiter)
+app.use("/api/v1/expense", strictLimiter)
+
 
 app.use(express.json());
 app.listen(PORT, () => {

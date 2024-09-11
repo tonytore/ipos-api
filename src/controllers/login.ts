@@ -75,8 +75,6 @@ export async function forgotPassword(req: Request, res: Response) {
       });
     }
 
-
-
     const resetToken = generateToken();
     const resetTokenExpiry = addMinutes(new Date(), 10);
     const currentTime = new Date();
@@ -190,3 +188,4 @@ export const changePassword = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error", error: error });
   }
 };
+

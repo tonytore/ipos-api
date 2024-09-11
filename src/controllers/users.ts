@@ -206,41 +206,6 @@ export async function updateUserById(req: Request, res: Response) {
       
     }
   }
-
-  export async function updatePasswordById(req: Request, res: Response) {
-    const { id } = req.params;
-    const { password } = req.body;
-    try {
-      const user = await db.user.findUnique({
-        where: {
-          id,
-        },
-      });
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      const hashedPassword = await bcrypt.hash(password,10)
-      const updatePassword = db.user.update({
-        where:{
-            id
-        },
-        data:{
-          password: hashedPassword
-        }
-      })
-      return res.status(200).json({
-          data:updatePassword,
-          error:null
-      });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({
-          error: "Something went wrong",
-          data:null
-      })
-      
-    }
-  }
 export async function DeleteUser(req: Request, res: Response) {
     const {id} = req.params
     const existingUser = await db.user.findUnique({
@@ -291,5 +256,48 @@ export async function getAttendants(req: Request, res: Response) {
           error: "Something went wrong",
           data:null
       })
+    }
+  }
+
+  export async function updateUserPasswordById(req: Request, res: Response) {
+    const { id } = req.params;
+    const { oldPassword, newPassword } = req.body;
+    try {
+      const user = await db.user.findUnique({
+        where: {
+          id,
+        },
+      });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      const passwordMatch = await bcrypt.compare(oldPassword,user.password)
+      if (!passwordMatch) {
+        return res.status(401).json(
+          { 
+            message: "Incorrect oldPassword" ,
+            data:null
+        });
+      }
+      const hashedPassword = await bcrypt.hash(newPassword,10)
+      const updatePassword = await db.user.update({
+        where:{
+            id
+        },
+        data:{
+          password: hashedPassword
+        }
+      })
+      return res.status(200).json({
+          data:updatePassword,
+          error:null
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+          error: "Something went wrong",
+          data:null
+      })
+      
     }
   }
