@@ -1,4 +1,4 @@
-import { SaleType, paymentMethod } from "@prisma/client";
+import { PurchaseOrderStatus, SaleType, paymentMethod } from "@prisma/client";
 
 export interface SaleRequestBody {
   customerId: string;
@@ -21,4 +21,41 @@ export interface SaleItems {
     ProductPrice:number
     productName:string
     productImage:string
+}
+
+export interface AdjustmentItems {
+  productId: string;
+  adjustmentId: string;
+  productName: string;
+  currentStock: number;
+  type: string;
+  quantity: number;
+}
+
+export interface createAdjustmentProps {
+  reason:string
+  items:AdjustmentItems[];
+}
+
+export type PurchaseOrderProp = {
+  supplierId: string;
+  discount?: number;
+  notes?: string;
+  tax?: number;
+  totalAmount: number;
+  balanceAmount: number;
+  shippingCost?: number;
+  status:PurchaseOrderStatus;
+  items: PurchaseOrderItem[];
+};
+
+export type PurchaseOrderItem = {
+  productId: string;
+  purchaseOrderId: string;
+
+  productName: string;
+  quantity: number;
+  unitCost: number;
+  subTotal: number;
+  currentStock: number;
 }

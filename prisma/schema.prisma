@@ -70,6 +70,7 @@ model Supplier {
   notes             String?
 
   products Product[]
+  purchaseOrder PurchaseOrder[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -187,6 +188,8 @@ model Product {
   supplier       Supplier  @relation(fields: [supplierId], references: [id])
 
   saleItems SaleItem[]
+  adjustmentItems AdjustmentItems[]
+  purchaseOrderItem PurchaseOrderItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -281,3 +284,88 @@ model Expense {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+enum NotificationStatus{
+  WARNING
+  DANGER
+  INFO
+}
+
+model Notification {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  message        String 
+  status       NotificationStatus @default(WARNING)
+  statusText String
+  read  Boolean @default(false) 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  }
+
+ model AdjustmentItems {
+   id            String  @id @default(auto()) @map("_id") @db.ObjectId
+   productId     String  @db.ObjectId
+   adjustmentId String @db.ObjectId
+   productName   String
+   currentStock  Int
+   type String
+   quantity Int
+   
+   product   Product @relation(fields: [productId],references: [id])
+   adjustment   Adjustment @relation(fields: [adjustmentId],references: [id])
+
+    createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ }
+  model Adjustment {
+    id            String  @id @default(auto()) @map("_id") @db.ObjectId
+    refNo        String  @unique @default("AAAAB")
+    reason       String
+    items       AdjustmentItems[]
+
+    createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  }
+
+ model PurchaseOrderItem {
+   id            String  @id @default(auto()) @map("_id") @db.ObjectId
+   productId     String  @db.ObjectId
+   purchaseOrderId String @db.ObjectId
+   
+   productName   String
+   quantity Int
+   unitCost Int
+   subTotal Int
+   currentStock Int
+  
+
+  product   Product @relation(fields: [productId],references: [id]) 
+  purchaseOrder     PurchaseOrder  @relation(fields: [purchaseOrderId],references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ }
+
+  enum PurchaseOrderStatus {
+  PAID
+  PARTIAL
+  UNPAID
+ }
+  model PurchaseOrder {
+    id            String  @id @default(auto()) @map("_id") @db.ObjectId
+    supplierId        String @db.ObjectId
+    supplier     Supplier  @relation(fields: [supplierId],references: [id])
+    status  PurchaseOrderStatus @default(PAID)
+    discount Int?
+    notes String?
+    tax Int?
+    refNo String
+    totalAmount Int
+    balanceAmount Int
+    shippingCost Int?
+
+    items PurchaseOrderItem[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+  }

@@ -14,6 +14,9 @@ import expenseCategoryRoute from "./routes/expenseCategory";
 import payeeRoute from "./routes/payee";
 import expenseRoute from "./routes/expense";
 import rateLimit from "express-rate-limit";
+import notificationRoute from "./routes/notification";
+import adjustmentRoute from "./routes/adjustments";
+import purchaseRoute from "./routes/purchase";
 
 require("dotenv").config();
 const cors = require("cors");
@@ -74,4 +77,6 @@ app.use("/api/v1", saleRoute)
 app.use("/api/v1", expenseCategoryRoute)
 app.use("/api/v1", payeeRoute)
 app.use("/api/v1", expenseRoute)
-
+app.use("/api/v1", notificationRoute)
+app.use("/api/v1", adjustmentRoute)
+app.use("/api/v1", purchaseRoute)
